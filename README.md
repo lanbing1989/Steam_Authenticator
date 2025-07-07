@@ -14,7 +14,7 @@
 
 ##Win平台
 
-请直接下载 Steam_Authenticator.exe 即可使用。
+请直接下载 `Steam_Authenticator.exe` 即可使用。
 
 ## 使用方法
 
