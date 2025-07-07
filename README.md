@@ -22,7 +22,7 @@
    将所有 Steam 手机令牌导出的 maFile 文件放入本程序同目录下的 `maFile` 文件夹内（如没有请自行创建）。
 
 2. **运行程序**  
-   双击或命令行运行 `steam_single_code_gui_pro.py`。
+   双击或命令行运行 `Steam_Authenticator.py`。
 
 3. **浏览/搜索账号**  
    程序会自动读取 maFile 文件夹下的所有账号，并在主界面显示。支持关键词搜索。
