@@ -1,4 +1,4 @@
-# Steam maFile 多账号管理器
+# Steam Authenticator 多账号管理器
 
 本项目是一个基于 Python + Tkinter 的图形界面工具，支持批量管理 Steam 手机令牌（maFile）文件，快速获取 Steam 令牌验证码。适合拥有多个 Steam 账号、需要频繁获取动态验证码的用户。
 
@@ -11,6 +11,10 @@
 - 一键复制验证码到剪贴板
 - 界面简洁，支持窗口靠右显示
 - 底部带有简易使用说明和版权信息
+
+##Win平台
+
+请直接下载 Steam_Authenticator.exe 即可使用。
 
 ## 使用方法
 
@@ -42,7 +46,7 @@ pip install steam-totp
 
 ## 目录结构
 ```
-steam_single_code_gui_pro.py
+Steam_Authenticator.py
 maFile/
     |- 你的账号1.maFile
     |- 你的账号2.maFile
