@@ -98,7 +98,7 @@ class SteamCodeApp:
         self.root.title("Steam maFile 多账号管理器 - 灯火通明")
         bg_color = "#ffffff"
         self.root.configure(bg=bg_color)
-        self.set_right_side(420, 660)  # 略微增高
+        self.set_right_side(560, 660)  # 增加宽度以适应内容
 
         self.mafiles_dir = DEFAULT_MAFILES_DIR  # 默认文件夹
 
@@ -110,26 +110,39 @@ class SteamCodeApp:
         style.configure("White.TFrame", background=bg_color)
         style.configure("White.TLabel", background=bg_color)
 
+        # ---------- 顶部区域：使用grid布局 ----------
         frm_top = ttk.Frame(root, padding=(10, 10, 10, 0), style="White.TFrame")
         frm_top.pack(fill=tk.X)
 
-        ttk.Label(frm_top, text="🔍", font=("微软雅黑", 14), background=bg_color).pack(side=tk.LEFT, padx=(0, 2))
-        self.entry_search = ttk.Entry(frm_top, font=("微软雅黑", 12), width=24)
-        self.entry_search.pack(side=tk.LEFT, padx=4)
+        # 搜索图标
+        lbl_icon = ttk.Label(frm_top, text="🔍", font=("微软雅黑", 14), background=bg_color)
+        lbl_icon.grid(row=0, column=0, padx=(0, 2), pady=0, sticky="w")
+
+        # 搜索框
+        self.entry_search = ttk.Entry(frm_top, font=("微软雅黑", 12), width=16)
+        self.entry_search.grid(row=0, column=1, padx=4, pady=0, sticky="ew")
         self.entry_search.bind("<KeyRelease>", self.search_accounts)
 
+        # 刷新按钮
         btn_refresh = ttk.Button(frm_top, text="刷新账号列表", command=self.refresh_mafiles)
-        btn_refresh.pack(side=tk.LEFT, padx=12)
+        btn_refresh.grid(row=0, column=2, padx=8, pady=0, sticky="e")
 
+        # 选择文件夹
         btn_choose = ttk.Button(frm_top, text="选择文件夹", command=self.choose_folder)
-        btn_choose.pack(side=tk.LEFT, padx=12)
+        btn_choose.grid(row=0, column=3, padx=8, pady=0, sticky="e")
 
-        # 单列Treeview，只显示账号
+        # 当前文件夹提示
+        self.lbl_dir = ttk.Label(frm_top, text=f"当前目录: {self.mafiles_dir}", font=("微软雅黑", 9), background=bg_color, foreground="#1976d2")
+        self.lbl_dir.grid(row=1, column=0, columnspan=4, sticky="w", padx=2, pady=(3, 0))
+
+        frm_top.columnconfigure(1, weight=1)  # 让搜索框自动拉伸
+
+        # ---------- 表格区域 ----------
         frm_table = ttk.Frame(root, padding=(10, 4, 10, 4), style="White.TFrame")
         frm_table.pack(fill=tk.BOTH, expand=True)
         self.tree = ttk.Treeview(frm_table, columns=("account",), show="headings", height=12, style="Treeview")
         self.tree.heading("account", text="账号")
-        self.tree.column("account", width=360, anchor="center")
+        self.tree.column("account", width=440, anchor="center")
         vsb = ttk.Scrollbar(frm_table, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=vsb.set)
         self.tree.grid(row=0, column=0, sticky="nsew")
@@ -146,7 +159,7 @@ class SteamCodeApp:
 
         self.show_footer(bg_color)
 
-    def set_right_side(self, width=420, height=660):
+    def set_right_side(self, width=560, height=660):
         self.root.update_idletasks()
         sw = self.root.winfo_screenwidth()
         sh = self.root.winfo_screenheight()
@@ -158,12 +171,14 @@ class SteamCodeApp:
         path = filedialog.askdirectory(title="请选择maFiles文件夹")
         if path:
             self.mafiles_dir = path
+            self.lbl_dir.config(text=f"当前目录: {self.mafiles_dir}")
             self.refresh_mafiles()
 
     def refresh_mafiles(self, first_time=False):
         self.mafiles = load_mafiles(self.mafiles_dir)
         self.filtered_mafiles = self.mafiles.copy()
         self.reload_treeview()
+        self.lbl_dir.config(text=f"当前目录: {self.mafiles_dir}")
         if not first_time:
             messagebox.showinfo("提示", f"账号列表已刷新\n当前文件夹: {self.mafiles_dir}")
 
@@ -217,7 +232,7 @@ class SteamCodeApp:
             justify="left",
             style="White.TLabel",
             anchor="w",
-            wraplength=400,  # 自动换行，保证文字完整显示
+            wraplength=500,  # 自动换行，保证文字完整显示
             padding=(0, 0, 0, 1)
         )
         label2.pack(fill=tk.X, anchor="w")
