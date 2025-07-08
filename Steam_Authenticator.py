@@ -3,9 +3,9 @@ import json
 import time
 import steam_totp
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
 
-MAFILES_DIR = "maFile"
+DEFAULT_MAFILES_DIR = "maFiles"
 
 def load_mafiles(mafiles_dir):
     mafiles = []
@@ -100,6 +100,8 @@ class SteamCodeApp:
         self.root.configure(bg=bg_color)
         self.set_right_side(420, 660)  # 略微增高
 
+        self.mafiles_dir = DEFAULT_MAFILES_DIR  # 默认文件夹
+
         style = ttk.Style(self.root)
         style.theme_use('clam')
         style.configure("Treeview", font=("微软雅黑", 12), rowheight=32, background=bg_color, fieldbackground=bg_color, foreground="#222")
@@ -118,6 +120,9 @@ class SteamCodeApp:
 
         btn_refresh = ttk.Button(frm_top, text="刷新账号列表", command=self.refresh_mafiles)
         btn_refresh.pack(side=tk.LEFT, padx=12)
+
+        btn_choose = ttk.Button(frm_top, text="选择文件夹", command=self.choose_folder)
+        btn_choose.pack(side=tk.LEFT, padx=12)
 
         # 单列Treeview，只显示账号
         frm_table = ttk.Frame(root, padding=(10, 4, 10, 4), style="White.TFrame")
@@ -139,7 +144,6 @@ class SteamCodeApp:
         self.tree_items = {}
         self.refresh_mafiles(first_time=True)
 
-        # 使用说明和版权信息
         self.show_footer(bg_color)
 
     def set_right_side(self, width=420, height=660):
@@ -150,12 +154,18 @@ class SteamCodeApp:
         y = int((sh - height) / 2)
         self.root.geometry(f"{width}x{height}+{x}+{y}")
 
+    def choose_folder(self):
+        path = filedialog.askdirectory(title="请选择maFiles文件夹")
+        if path:
+            self.mafiles_dir = path
+            self.refresh_mafiles()
+
     def refresh_mafiles(self, first_time=False):
-        self.mafiles = load_mafiles(MAFILES_DIR)
+        self.mafiles = load_mafiles(self.mafiles_dir)
         self.filtered_mafiles = self.mafiles.copy()
         self.reload_treeview()
         if not first_time:
-            messagebox.showinfo("提示", "账号列表已刷新")
+            messagebox.showinfo("提示", f"账号列表已刷新\n当前文件夹: {self.mafiles_dir}")
 
     def reload_treeview(self):
         for item in self.tree.get_children():
@@ -194,7 +204,7 @@ class SteamCodeApp:
         label1 = ttk.Label(frm_footer, text="【使用说明】", font=("微软雅黑", 10, "bold"), foreground="#222", style="White.TLabel")
         label1.pack(anchor="w", pady=(2, 0))
         desc = (
-            "1. 将所有 Steam maFile 文件放入本程序同目录的 maFile 文件夹内。\n"
+            "1. 将所有 Steam maFile 文件放入本程序同目录的 maFiles 文件夹内（或点击“选择文件夹”自定义目录）。\n"
             "2. 搜索或直接浏览账号列表，双击账号弹出验证码窗口。\n"
             "3. 验证码窗口可自动刷新，显示倒计时，并支持一键复制。\n"
             "4. 若新增/更换 maFile 文件，点击“刷新账号列表”按钮即可。"
