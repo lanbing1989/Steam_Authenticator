@@ -19,7 +19,7 @@
 ## 使用方法
 
 1. **准备 maFile 文件**  
-   将所有 Steam 手机令牌导出的 maFile 文件放入本程序同目录下的 `maFile` 文件夹内（如没有请自行创建）。
+   将所有 Steam maFile 文件放入本程序同目录的 `maFiles` 文件夹内（或点击“选择文件夹”自定义目录）。
 
 2. **运行程序**  
    双击或命令行运行 `Steam_Authenticator.py`。
